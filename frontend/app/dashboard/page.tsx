@@ -8,8 +8,11 @@ export default function DashboardPage() {
 
   const [message, setMessage] = useState("Loading...");
   const [email, setEmail] = useState("");
+  const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ??
+  "http://localhost:5162";
 
-  useEffect(() => {
+    useEffect(() => {
     async function loadProfile() {
       const token = localStorage.getItem("token");
 
@@ -19,8 +22,7 @@ export default function DashboardPage() {
       }
 
       try {
-        const response = await fetch(
-          "http://localhost:5162/api/auth/profile",
+        const response = await fetch(`${API_URL}/api/auth/profile`,
           {
             method: "GET",
             headers: {

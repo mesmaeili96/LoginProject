@@ -39,7 +39,8 @@ export default function LoginPage() {
 
     localStorage.removeItem("blockedUntil");
   }, [router]);
-
+  const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5162";
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -48,19 +49,16 @@ export default function LoginPage() {
     setMessage("");
 
     try {
-      const response = await fetch(
-        "http://localhost:5162/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
+     const response = await fetch(
+  `${API_URL}/api/auth/login`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  }
+);
 
       const data = await response.json();
 

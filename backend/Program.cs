@@ -1,34 +1,39 @@
 using backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Controllers
-
-
 builder.Services.AddControllers();
 
+builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition(
+        "bearer",
+        new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            Description = "Enter your JWT token"
+        }
+    );
 
-// Application Services
-
+    options.AddSecurityRequirement(document =>
+        new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference("bearer", document)] = []
+        }
+    );
+});
 
 builder.Services.AddScoped<IAuthService, AuthService>();
-
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
-
-builder.Services.AddSingleton<
-    ILoginAttemptService,
-    LoginAttemptService
->();
-
-
-
-// CORS
-
+builder.Services.AddSingleton<ILoginAttemptService, LoginAttemptService>();
 
 builder.Services.AddCors(options =>
 {
@@ -41,9 +46,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-
-
-
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -52,18 +54,12 @@ builder.Services
             new TokenValidationParameters
             {
                 ValidateIssuer = true,
-
                 ValidateAudience = true,
-
                 ValidateLifetime = true,
-
                 ValidateIssuerSigningKey = true,
 
-                ValidIssuer =
-                    builder.Configuration["Jwt:Issuer"],
-
-                ValidAudience =
-                    builder.Configuration["Jwt:Audience"],
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
 
                 IssuerSigningKey =
                     new SymmetricSecurityKey(
@@ -74,32 +70,18 @@ builder.Services
             };
     });
 
-
-
-// Authorization
-
-
 builder.Services.AddAuthorization();
-
 
 var app = builder.Build();
 
-
-
-// Middleware
-
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors("NextJs");
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
-
-// Controllers
-
-
 app.MapControllers();
-
 
 app.Run();

@@ -40,3 +40,4 @@ C:\Users\Srh\LoginProject\backend\bin\Debug\net10.0\Microsoft.IdentityModel.Prot
 C:\Users\Srh\LoginProject\backend\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\Srh\LoginProject\backend\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Srh\LoginProject\backend\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Srh\LoginProject\backend\obj\Debug\net10.0\backend.sourcelink.json
